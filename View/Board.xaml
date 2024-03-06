@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="ChessGUI.View.Board"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ChessGUI.View"
+             xmlns:model="clr-namespace:ChessGUI.Model"
+             d:DataContext="{d:DesignInstance Type=model:Board}"
+             mc:Ignorable="d">
+    <ItemsControl ItemsSource="{Binding ChessBoard}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <UniformGrid Margin="36,40,36,40" Rows="{Binding Row}" Columns="{Binding Colomn}"/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <local:Chess Type="{Binding Type}"
+                             Row="{Binding Row}" Colomn="{Binding Col}"
+                             ButtonClicked="ButtonClicked"/>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

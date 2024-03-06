@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="board" UriSource="Images/board.bmp"/>
+    <BitmapImage x:Key="mask" UriSource="Images/mask.bmp"/>
+    <BitmapImage x:Key="ba" UriSource="Images/ba.png"/>
+    <BitmapImage x:Key="bb" UriSource="Images/bb.png"/>
+    <BitmapImage x:Key="bc" UriSource="Images/bc.png"/>
+    <BitmapImage x:Key="bk" UriSource="Images/bk.png"/>
+    <BitmapImage x:Key="bn" UriSource="Images/bn.png"/>
+    <BitmapImage x:Key="bp" UriSource="Images/bp.png"/>
+    <BitmapImage x:Key="br" UriSource="Images/br.png"/>
+
+    <BitmapImage x:Key="ra" UriSource="Images/ra.png"/>
+    <BitmapImage x:Key="rb" UriSource="Images/rb.png"/>
+    <BitmapImage x:Key="rc" UriSource="Images/rc.png"/>
+    <BitmapImage x:Key="rk" UriSource="Images/rk.png"/>
+    <BitmapImage x:Key="rn" UriSource="Images/rn.png"/>
+    <BitmapImage x:Key="rp" UriSource="Images/rp.png"/>
+    <BitmapImage x:Key="rr" UriSource="Images/rr.png"/>
+
+</ResourceDictionary>

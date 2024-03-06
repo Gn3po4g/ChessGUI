@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\ba.bmp" />
+    <None Remove="Images\ba.png" />
+    <None Remove="Images\bb.bmp" />
+    <None Remove="Images\bb.png" />
+    <None Remove="Images\bc.bmp" />
+    <None Remove="Images\bc.png" />
+    <None Remove="Images\bk.bmp" />
+    <None Remove="Images\bk.png" />
+    <None Remove="Images\bn.bmp" />
+    <None Remove="Images\bn.png" />
+    <None Remove="Images\board.bmp" />
+    <None Remove="Images\bp.bmp" />
+    <None Remove="Images\bp.png" />
+    <None Remove="Images\br.bmp" />
+    <None Remove="Images\br.png" />
+    <None Remove="Images\mask.bmp" />
+    <None Remove="Images\mask.png" />
+    <None Remove="Images\mask2.bmp" />
+    <None Remove="Images\mm.png" />
+    <None Remove="Images\ra.bmp" />
+    <None Remove="Images\ra.png" />
+    <None Remove="Images\rb.bmp" />
+    <None Remove="Images\rb.png" />
+    <None Remove="Images\rc.bmp" />
+    <None Remove="Images\rc.png" />
+    <None Remove="Images\rk.bmp" />
+    <None Remove="Images\rk.png" />
+    <None Remove="Images\rn.bmp" />
+    <None Remove="Images\rn.png" />
+    <None Remove="Images\rp.bmp" />
+    <None Remove="Images\rp.png" />
+    <None Remove="Images\rr.bmp" />
+    <None Remove="Images\rr.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\ba.png" />
+    <Resource Include="Images\bb.png" />
+    <Resource Include="Images\bc.png" />
+    <Resource Include="Images\bk.png" />
+    <Resource Include="Images\bn.png" />
+    <Resource Include="Images\board.bmp" />
+    <Resource Include="Images\bp.png" />
+    <Resource Include="Images\br.png" />
+    <Resource Include="Images\mask.bmp" />
+    <Resource Include="Images\mask.png" />
+    <Resource Include="Images\mask2.bmp" />
+    <Resource Include="Images\mm.png" />
+    <Resource Include="Images\ra.png" />
+    <Resource Include="Images\rb.png" />
+    <Resource Include="Images\rc.png" />
+    <Resource Include="Images\rk.png" />
+    <Resource Include="Images\rn.png" />
+    <Resource Include="Images\rp.png" />
+    <Resource Include="Images\rr.png" />
+  </ItemGroup>
+
+</Project>

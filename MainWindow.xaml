@@ -1,0 +1,35 @@
+﻿<Window x:Class="ChessGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChessGUI.View"
+        mc:Ignorable="d"
+        Title="ChessGUI" Height="700" Width="520"
+        Loaded="OnLoad">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="550" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Click="Reset">Reset</Button>
+            <Button Click="Clear">Clear</Button>
+        </StackPanel>
+
+        <Image Stretch="Uniform" Grid.Row="1">
+            <Image.Source>
+                <BitmapImage UriSource="Images/board.bmp"/>
+            </Image.Source>
+        </Image>
+        <local:Board x:Name="Board" Grid.Row="1"/>
+
+        <!--<TextBox Grid.Row="1" x:Name="message_received" />-->
+
+        <!--<StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0">
+            <TextBox x:Name="message" />
+            <Button x:Name="btnAdd" Margin="0,5,0,0" Click ="Send">Send</Button>
+        </StackPanel>-->
+    </Grid>
+</Window>
