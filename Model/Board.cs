@@ -2,6 +2,18 @@
     public class Board {
         public static int Row { get; } = 10;
         public static int Column { get; } = 9;
+        public static double Size { get; } = 60;
+        public static double BoardWidth {
+            get {
+                return Size * Column;
+            }
+        }
+        public static double BoardHeight {
+            get {
+                return Size * Row;
+            }
+        }
+
         public Chess[,] TheBoard { get; } = new Chess[Row, Column];
 
         private Chess? _focused = null, _start = null, _end = null;
@@ -13,13 +25,13 @@
                 if (_focused != null) { _focused.Focused = true; }
             }
         }
-        public Chess? Start { 
-            get { return _start; } 
+        public Chess? Start {
+            get { return _start; }
             set {
                 if (_start != null) { _start.Focused = false; }
                 _start = value;
                 if (_start != null) { _start.Focused = true; }
-            } 
+            }
         }
         public Chess? End {
             get { return _end; }

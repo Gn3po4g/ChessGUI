@@ -12,7 +12,7 @@
         <converter:Bool2VisibilityConverter x:Key="Bool2Visibility"/>
         <converter:Type2ImageConverter x:Key="Type2Image"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid Width="{x:Static model:Board.Size}" Height="{x:Static model:Board.Size}">
         <Button Name="Button" Opacity="0" Click="Click"/>
         <Image Name="Image" IsHitTestVisible="False" Source="{Binding Type, Converter={StaticResource Type2Image}}"/>
         <Image Name="Mask" IsHitTestVisible="False" Visibility="{Binding Focused, Converter={StaticResource Bool2Visibility}}"/>

@@ -26,7 +26,7 @@ namespace ChessGUI.View {
 
         public Chess() {
             InitializeComponent();
-            Mask.Source = Util.BitmapFilter((BitmapImage)Application.Current.Resources["mask"], 0xff, 0xff, 0xff);
+            Mask.Source = (BitmapImage)Application.Current.Resources["mark"];
         }
 
         public event EventHandler<ClickEventArgs>? ButtonClicked;

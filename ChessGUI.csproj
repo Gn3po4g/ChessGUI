@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,13 +18,23 @@
     <None Remove="Images\bc.png" />
     <None Remove="Images\bk.bmp" />
     <None Remove="Images\bk.png" />
+    <None Remove="Images\black_advisor.png" />
+    <None Remove="Images\black_bishop.png" />
+    <None Remove="Images\black_cannon.png" />
+    <None Remove="Images\black_king.png" />
+    <None Remove="Images\black_knight.png" />
+    <None Remove="Images\black_pawn.png" />
+    <None Remove="Images\black_rook.png" />
     <None Remove="Images\bn.bmp" />
     <None Remove="Images\bn.png" />
     <None Remove="Images\board.bmp" />
+    <None Remove="Images\board.png" />
     <None Remove="Images\bp.bmp" />
     <None Remove="Images\bp.png" />
     <None Remove="Images\br.bmp" />
     <None Remove="Images\br.png" />
+    <None Remove="Images\check.png" />
+    <None Remove="Images\mark.png" />
     <None Remove="Images\mask.bmp" />
     <None Remove="Images\mask.png" />
     <None Remove="Images\mask2.bmp" />
@@ -34,6 +45,13 @@
     <None Remove="Images\rb.png" />
     <None Remove="Images\rc.bmp" />
     <None Remove="Images\rc.png" />
+    <None Remove="Images\red_advisor.png" />
+    <None Remove="Images\red_bishop.png" />
+    <None Remove="Images\red_cannon.png" />
+    <None Remove="Images\red_king.png" />
+    <None Remove="Images\red_knight.png" />
+    <None Remove="Images\red_pawn.png" />
+    <None Remove="Images\red_rook.png" />
     <None Remove="Images\rk.bmp" />
     <None Remove="Images\rk.png" />
     <None Remove="Images\rn.bmp" />
@@ -45,29 +63,31 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\ba.png" />
-    <Resource Include="Images\bb.png" />
-    <Resource Include="Images\bc.png" />
-    <Resource Include="Images\bk.png" />
-    <Resource Include="Images\bn.png" />
-    <Resource Include="Images\board.bmp" />
-    <Resource Include="Images\bp.png" />
-    <Resource Include="Images\br.png" />
-    <Resource Include="Images\mask.bmp" />
-    <Resource Include="Images\mask.png" />
-    <Resource Include="Images\mask2.bmp" />
-    <Resource Include="Images\mm.png" />
-    <Resource Include="Images\ra.png" />
-    <Resource Include="Images\rb.png" />
-    <Resource Include="Images\rc.png" />
-    <Resource Include="Images\rk.png" />
-    <Resource Include="Images\rn.png" />
-    <Resource Include="Images\rp.png" />
-    <Resource Include="Images\rr.png" />
+    <Resource Include="Images\black_advisor.png" />
+    <Resource Include="Images\black_bishop.png" />
+    <Resource Include="Images\black_cannon.png" />
+    <Resource Include="Images\black_king.png" />
+    <Resource Include="Images\black_knight.png" />
+    <Resource Include="Images\black_pawn.png" />
+    <Resource Include="Images\black_rook.png" />
+    <Resource Include="Images\board.png" />
+    <Resource Include="Images\check.png" />
+    <Resource Include="Images\mark.png" />
+    <Resource Include="Images\red_advisor.png" />
+    <Resource Include="Images\red_bishop.png" />
+    <Resource Include="Images\red_cannon.png" />
+    <Resource Include="Images\red_king.png" />
+    <Resource Include="Images\red_knight.png" />
+    <Resource Include="Images\red_pawn.png" />
+    <Resource Include="Images\red_rook.png" />
   </ItemGroup>
 
 </Project>

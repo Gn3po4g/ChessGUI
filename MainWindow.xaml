@@ -5,24 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChessGUI.View"
         mc:Ignorable="d"
-        Title="ChessGUI" Height="700" Width="520"
+        Title="ChessGUI" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
         Loaded="OnLoad">
-    <Grid Margin="10">
+    <Grid Background="#D5B790">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="550" />
+            <RowDefinition Height="40" />
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal">
             <Button Click="Reset">Reset</Button>
             <Button Click="Clear">Clear</Button>
         </StackPanel>
-
-        <Image Stretch="Uniform" Grid.Row="1">
-            <Image.Source>
-                <BitmapImage UriSource="Images/board.bmp"/>
-            </Image.Source>
-        </Image>
+        
         <local:Board x:Name="Board" Grid.Row="1"/>
 
         <!--<TextBox Grid.Row="1" x:Name="message_received" />-->

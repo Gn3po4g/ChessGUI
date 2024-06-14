@@ -7,10 +7,15 @@
              xmlns:model="clr-namespace:ChessGUI.Model"
              d:DataContext="{d:DesignInstance Type=model:Board}"
              mc:Ignorable="d">
-    <ItemsControl ItemsSource="{Binding ChessBoard}">
+    <ItemsControl ItemsSource="{Binding ChessBoard}" 
+                  Width="{x:Static model:Board.BoardWidth}" 
+                  Height="{x:Static model:Board.BoardHeight}">
+        <ItemsControl.Background>
+            <ImageBrush ImageSource="{StaticResource board}" Stretch="Uniform"/>
+        </ItemsControl.Background>
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <UniformGrid Margin="36,40,36,40" Rows="{Binding Row}" Columns="{Binding Colomn}"/>
+                <UniformGrid Rows="{Binding Row}" Columns="{Binding Colomn}"/>
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
