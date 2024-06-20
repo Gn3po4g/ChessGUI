@@ -1,20 +1,32 @@
 ﻿<UserControl x:Class="ChessGUI.View.Chess"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ChessGUI.View"
-             xmlns:model="clr-namespace:ChessGUI.Model"
-             xmlns:converter="clr-namespace:ChessGUI.Common"
-             d:DataContext="{d:DesignInstance Type=model:Chess}"
-             mc:Ignorable="d">
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:ChessGUI.ViewModel"
+             xmlns:local="clr-namespace:ChessGUI"
+             d:DataContext="{d:DesignInstance Type=vm:Chess}"
+             mc:Ignorable="d"
+             x:Name="ChessView">
     <UserControl.Resources>
-        <converter:Bool2VisibilityConverter x:Key="Bool2Visibility"/>
-        <converter:Type2ImageConverter x:Key="Type2Image"/>
+        <Style x:Key="Style" TargetType="Image">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Focused}" Value="true">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
-    <Grid Width="{x:Static model:Board.Size}" Height="{x:Static model:Board.Size}">
-        <Button Name="Button" Opacity="0" Click="Click"/>
-        <Image Name="Image" IsHitTestVisible="False" Source="{Binding Type, Converter={StaticResource Type2Image}}"/>
-        <Image Name="Mask" IsHitTestVisible="False" Visibility="{Binding Focused, Converter={StaticResource Bool2Visibility}}"/>
+    <Grid Width="{x:Static vm:Board.ChessSize}" Height="{x:Static vm:Board.ChessSize}">
+        <Grid.Background>
+            <ImageBrush ImageSource="{Binding ImageSource}"/>
+        </Grid.Background>
+        <Grid.InputBindings>
+            <MouseBinding Gesture="LeftClick"/>
+        </Grid.InputBindings>
+        <!-- <Image IsHitTestVisible="False" /> -->
+        <!-- <Image Style="{StaticResource Style}" -->
+        <!--        Source="{StaticResource Mark}" /> -->
     </Grid>
 </UserControl>

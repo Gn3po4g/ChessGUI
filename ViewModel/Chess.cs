@@ -1,46 +1,27 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using ChessGUI.Command;
 
-namespace ChessGUI.Model;
+namespace ChessGUI.ViewModel;
 
-public enum Type
+internal enum ChessColor
 {
-    Ba,
-    Bb,
-    Bc,
-    Bk,
-    Bn,
-    Bp,
-    Br,
-    None,
-    Ra,
-    Rb,
-    Rc,
-    Rk,
-    Rn,
-    Rp,
-    Rr
+    Red,Black
 }
 
-internal class Chess(int row, int col) : INotifyPropertyChanged
+internal abstract class Chess(int initRow, int initCow, ChessColor color) : INotifyPropertyChanged
 {
     private bool _focused;
-    private Type _type = Type.None;
 
-    private int Row => row;
-    private int Col => col;
+    private int _row = initRow;
+    private int _col = initCow;
 
-    public Type Type
-    {
-        get => _type;
-        set
-        {
-            _type = value;
-            OnTypeChanged(nameof(Type));
-        }
-    }
+    public double Left => Board.ChessSize * _col;
+    public double Top => Board.ChessSize * _row;
+
+    public abstract ImageSource ImageSource { get; set; }
 
     public bool Focused
     {
@@ -59,10 +40,5 @@ internal class Chess(int row, int col) : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
-    public bool IsRed => Type > Type.None;
-    
-    public bool CanEat(Chess other)
-    {
-        return Row == other.Row || Col == other.Col;
-    }
+    public abstract bool CanEat(Chess other);
 }

@@ -1,38 +1,34 @@
-﻿using ChessGUI.View;
+﻿using ChessGUI.Command;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 
-namespace ChessGUI {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window {
-        public MainWindow() {
-            InitializeComponent();
-        }
+namespace ChessGUI;
 
-        private void OnLoad(object sender, RoutedEventArgs e) {
-            //engine = new Engine("D:\\SharkChess\\engine\\pikafish\\pikafish-bmi2.exe", Receive);
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow
+{
+    // private readonly Model.Board _board = new();
 
-        }
-
-        private void Reset(object sender, RoutedEventArgs e) {
-            Board.ResetBoard();
-        }
-
-        private void Clear(object sender, RoutedEventArgs e) {
-            Board.ClearBoard();
-        }
-
-        //private void Send(object sender, RoutedEventArgs e) {
-        //    engine.Send(message.Text);
-        //    //message_received.Text +="a";
-        //}
-        //private void Receive(string message) {
-        //    if (message.StartsWith("bestmove")) {
-        //        Dispatcher.Invoke(()=> message_received.Text += message+'\n');
-        //    }
-        //}
+    public MainWindow()
+    {
+        InitializeComponent();
+        // ChessBoard.DataContext = _board;
+        ResetButton.Command = new ResetCommand((ViewModel.Board)Resources["BoardModel"]);
     }
+
+    private void OnLoad(object sender, RoutedEventArgs e)
+    {
+        //engine = new Engine("D:\\SharkChess\\engine\\pikafish\\pikafish-bmi2.exe", Receive);
+    }
+
+    //private void Send(object sender, RoutedEventArgs e) {
+    //    engine.Send(message.Text);
+    //    //message_received.Text +="a";
+    //}
+    //private void Receive(string message) {
+    //    if (message.StartsWith("bestmove")) {
+    //        Dispatcher.Invoke(()=> message_received.Text += message+'\n');
+    //    }
+    //}
 }
