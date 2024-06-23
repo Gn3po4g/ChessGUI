@@ -1,5 +1,4 @@
-﻿using ChessGUI.Command;
-using System.Windows;
+﻿using System.Windows;
 
 namespace ChessGUI;
 
@@ -8,13 +7,10 @@ namespace ChessGUI;
 /// </summary>
 public partial class MainWindow
 {
-    // private readonly Model.Board _board = new();
-
     public MainWindow()
     {
         InitializeComponent();
-        // ChessBoard.DataContext = _board;
-        ResetButton.Command = new ResetCommand((ViewModel.Board)Resources["BoardModel"]);
+        // ResetButton.Commands = new ResetCommand((ViewModels.Board)Resources["BoardModel"]);
     }
 
     private void OnLoad(object sender, RoutedEventArgs e)

@@ -1,0 +1,23 @@
+<UserControl x:Class="ChessGUI.Views.MovePoint"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:m="clr-namespace:ChessGUI.Models"
+             mc:Ignorable="d" x:Name="MovePointPiece"
+             d:DataContext="{d:DesignInstance m:MovePoint}">
+    <UserControl.InputBindings>
+        <MouseBinding
+            Gesture="LeftClick"
+            Command="{Binding Command, ElementName=MovePointPiece}"
+            CommandParameter="{Binding}" />
+    </UserControl.InputBindings>
+    <Border>
+        <Ellipse
+            Width="{x:Static m:Piece.PieceSize}"
+            Height="{x:Static m:Piece.PieceSize}"
+            StrokeThickness="50"
+            Stroke="Transparent"
+            Fill="GreenYellow" />
+    </Border>
+</UserControl>

@@ -3,24 +3,69 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:v="clr-namespace:ChessGUI.View"
-        xmlns:vm="clr-namespace:ChessGUI.ViewModel"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:local="clr-namespace:ChessGUI"
+        xmlns:v="clr-namespace:ChessGUI.Views"
+        xmlns:m="clr-namespace:ChessGUI.Models"
         mc:Ignorable="d"
         Title="ChessGUI" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
         Loaded="OnLoad">
     <Window.DataContext>
-        <vm:Board />
+        <local:MainWindowVm />
     </Window.DataContext>
-    <Grid Background="#D5B790">
+    <Window.Resources>
+        <CollectionViewSource x:Key="Chesses" Source="{Binding Chesses}" />
+        <CollectionViewSource x:Key="MovePoints" Source="{Binding MovePoints}" />
+    </Window.Resources>
+    <Grid Background="#D5B790" HorizontalAlignment="Left">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button x:Name="ResetButton">Reset</Button>
+            <Button Command="{Binding ResetCommand}">
+                Reset
+            </Button>
         </StackPanel>
-
-        <v:Board Grid.Row="1" />
+        <hc:SimplePanel
+            Grid.Row="1" x:Name="GameBoard"
+            Width="{Binding BoardWidth}"
+            Height="{Binding BoardHeight}"
+            Background="{StaticResource GameBoard}">
+            <ItemsControl>
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type m:Chess}">
+                        <v:Chess
+                            Command="{Binding DataContext.ClickCommand,
+                            ElementName=GameBoard}" />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type m:MovePoint}">
+                        <v:MovePoint
+                            Command="{Binding DataContext.MoveCommand, 
+                            ElementName=GameBoard}" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
+                <ItemsControl.ItemsSource>
+                    <CompositeCollection>
+                        <v:Mark DataContext="{Binding Current}" />
+                        <v:Mark DataContext="{Binding Start}" />
+                        <CollectionContainer Collection="{Binding Source={StaticResource Chesses}}" />
+                        <CollectionContainer Collection="{Binding Source={StaticResource MovePoints}}" />
+                    </CompositeCollection>
+                </ItemsControl.ItemsSource>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style d:DataContext="{d:DesignInstance m:Piece}">
+                        <Setter Property="Canvas.Left" Value="{Binding XofCanvas}" />
+                        <Setter Property="Canvas.Top" Value="{Binding YofCanvas}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+        </hc:SimplePanel>
     </Grid>
 </Window>
