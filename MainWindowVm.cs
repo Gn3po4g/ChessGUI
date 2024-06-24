@@ -1,17 +1,15 @@
-using System.ComponentModel;
-using System.Windows.Input;
-using ChessGUI.Commands;
+using System.Media;
 using ChessGUI.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ChessGUI;
 
-internal partial class MainWindowVm : ObservableObject
-{
+internal partial class MainWindowVm : ObservableObject {
     public static double BoardWidth => Piece.PieceSize * 9;
     public static double BoardHeight => Piece.PieceSize * 10;
 
-    public BindingList<Chess> Chesses { get; } =
+    private readonly IEnumerable<Chess> _chesses =
     [
         // Black
         new Chess(3, 0, ChessType.BlackAdvisor), new Chess(5, 0, ChessType.BlackAdvisor),
@@ -33,53 +31,53 @@ internal partial class MainWindowVm : ObservableObject
         new Chess(1, 7, ChessType.RedCannon), new Chess(7, 7, ChessType.RedCannon)
     ];
 
-    private Dictionary<(int, int), Chess> ChessPositions => Chesses
+    private Dictionary<(int, int), Chess> ChessPositions => _chesses
         .Where(chess => chess.IsAlive)
         .ToDictionary(chess => (chess.X, chess.Y));
 
-    [ObservableProperty] private BindingList<MovePoint> _movePoints = [];
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Pieces))]
+    private IEnumerable<MovePoint> _movePoints = [];
 
-    [ObservableProperty] private Chess? _current;
-    [ObservableProperty] private Chess? _start;
+    public IEnumerable<Piece> Pieces => _chesses.Cast<Piece>().Concat(MovePoints);
+
+    [ObservableProperty] private Piece? _current;
+    [ObservableProperty] private Piece? _start;
 
     private bool _redTurn = true;
 
-    public ICommand ResetCommand => new ResetCommand(Reset);
-    public ICommand ClickCommand => new ClickCommand(chess => chess.IsRed ^ !_redTurn, Click);
-    public ICommand MoveCommand => new MoveCommand(MoveTo);
-
-    private void Reset()
-    {
-        foreach (var chess in Chesses)
-        {
+    [RelayCommand]
+    private void Reset() {
+        foreach (var chess in _chesses) {
             chess.ResetPosition();
         }
-
         Current = null;
         Start = null;
         MovePoints = [];
         _redTurn = true;
     }
 
-    private void Click(Chess chess)
-    {
+    [RelayCommand(CanExecute = nameof(CanClick))]
+    private void Click(Chess chess) {
         Start = null;
         Current = chess;
-        MovePoints = new BindingList<MovePoint>(chess.GetMovePoints(Chesses).ToList());
+        MovePoints = chess.GetMovePoints(ChessPositions);
+        new SoundPlayer("Resources/capture.wav").Play();
     }
 
-    private void MoveTo(MovePoint movePoint)
-    {
+    private bool CanClick(Chess chess) => !(chess.IsRed ^ _redTurn);
+
+    [RelayCommand]
+    private void MoveTo(MovePoint movePoint) {
         if (Current == null) return;
-        var des = Chesses.SingleOrDefault(chess =>
-            chess is { IsAlive: true } &&
-            chess.X == movePoint.X &&
-            chess.Y == movePoint.Y, null);
-        if (des != null) des.ChessType = ChessType.Null;
-        Start = new Chess(Current.X, Current.Y, Current.ChessType);
+        if (ChessPositions.TryGetValue(new(movePoint.X, movePoint.Y), out var chess)) {
+            chess.IsAlive = false;
+        }
+        Start = new Piece { X = Current.X, Y = Current.Y };
         Current.X = movePoint.X;
         Current.Y = movePoint.Y;
         MovePoints = [];
         _redTurn ^= true;
+        new SoundPlayer("Resources/move.wav").Play();
     }
 }

@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ChessGUI.Models;
 
-internal partial class Piece : ObservableObject
+public partial class Piece : ObservableObject
 {
     public static double PieceSize => 60;
 

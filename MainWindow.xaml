@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:ChessGUI"
         xmlns:v="clr-namespace:ChessGUI.Views"
         xmlns:m="clr-namespace:ChessGUI.Models"
+        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
         mc:Ignorable="d"
         Title="ChessGUI" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
         Loaded="OnLoad">
@@ -14,10 +15,13 @@
         <local:MainWindowVm />
     </Window.DataContext>
     <Window.Resources>
-        <CollectionViewSource x:Key="Chesses" Source="{Binding Chesses}" />
-        <CollectionViewSource x:Key="MovePoints" Source="{Binding MovePoints}" />
+        <ws:BindingProxy x:Key="VmProxy" Data="{Binding}" />
+        <Style x:Key="PieceStyle">
+            <Setter Property="Canvas.Left" Value="{Binding XofCanvas}" />
+            <Setter Property="Canvas.Top" Value="{Binding YofCanvas}" />
+        </Style>
     </Window.Resources>
-    <Grid Background="#D5B790" HorizontalAlignment="Left">
+    <Grid Background="#D5B790">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition />
@@ -28,44 +32,38 @@
                 Reset
             </Button>
         </StackPanel>
+
         <hc:SimplePanel
-            Grid.Row="1" x:Name="GameBoard"
+            Grid.Row="1"
             Width="{Binding BoardWidth}"
             Height="{Binding BoardHeight}"
             Background="{StaticResource GameBoard}">
-            <ItemsControl>
-                <ItemsControl.Resources>
-                    <DataTemplate DataType="{x:Type m:Chess}">
-                        <v:Chess
-                            Command="{Binding DataContext.ClickCommand,
-                            ElementName=GameBoard}" />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type m:MovePoint}">
-                        <v:MovePoint
-                            Command="{Binding DataContext.MoveCommand, 
-                            ElementName=GameBoard}" />
-                    </DataTemplate>
-                </ItemsControl.Resources>
-                <ItemsControl.ItemsSource>
-                    <CompositeCollection>
-                        <v:Mark DataContext="{Binding Current}" />
-                        <v:Mark DataContext="{Binding Start}" />
-                        <CollectionContainer Collection="{Binding Source={StaticResource Chesses}}" />
-                        <CollectionContainer Collection="{Binding Source={StaticResource MovePoints}}" />
-                    </CompositeCollection>
-                </ItemsControl.ItemsSource>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemContainerStyle>
-                    <Style d:DataContext="{d:DesignInstance m:Piece}">
+            <Canvas>
+                <Canvas.Resources>
+                    <Style TargetType="v:Mark">
                         <Setter Property="Canvas.Left" Value="{Binding XofCanvas}" />
                         <Setter Property="Canvas.Top" Value="{Binding YofCanvas}" />
                     </Style>
-                </ItemsControl.ItemContainerStyle>
-            </ItemsControl>
+                </Canvas.Resources>
+                <ItemsControl ItemsSource="{Binding Pieces}"
+                              ItemContainerStyle="{StaticResource PieceStyle}">
+                    <ItemsControl.Resources>
+                        <DataTemplate DataType="{x:Type m:Chess}">
+                            <v:Chess Command="{Binding Data.ClickCommand, Source={StaticResource VmProxy}}" />
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type m:MovePoint}">
+                            <v:MovePoint Command="{Binding Data.MoveToCommand, Source={StaticResource VmProxy}}" />
+                        </DataTemplate>
+                    </ItemsControl.Resources>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <v:Mark DataContext="{Binding Current}" Style="{StaticResource PieceStyle}"/>
+                <v:Mark DataContext="{Binding Start}" Style="{StaticResource PieceStyle}"/>
+            </Canvas>
         </hc:SimplePanel>
     </Grid>
 </Window>

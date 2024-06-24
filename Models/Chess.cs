@@ -2,9 +2,7 @@
 
 namespace ChessGUI.Models;
 
-internal enum ChessType
-{
-    Null,
+public enum ChessType {
     BlackAdvisor,
     BlackBishop,
     BlackCannon,
@@ -21,55 +19,43 @@ internal enum ChessType
     RedRook,
 }
 
-internal partial class Chess : Piece
-{
+public partial class Chess : Piece {
     private readonly int _initX, _initY;
-    private readonly ChessType _initType;
 
-    [ObservableProperty] private ChessType _chessType = ChessType.Null;
+    [ObservableProperty] private ChessType _chessType;
 
-    public Chess()
-    {
+    [ObservableProperty] private bool _isAlive;
+
+    public Chess() {
     }
 
-    public Chess(int initX, int initY, ChessType type)
-    {
+    public Chess(int initX, int initY, ChessType type) {
         _initX = initX;
         _initY = initY;
-        _initType = type;
+        ChessType = type;
         ResetPosition();
     }
 
-    public bool IsRed => ChessType switch
-    {
-        ChessType.RedAdvisor or ChessType.RedBishop or ChessType.RedCannon or ChessType.RedKing
-            or ChessType.RedKnight or ChessType.RedPawn or ChessType.RedRook => true,
-        _ => false
-    };
+    public bool IsRed => ChessType >= ChessType.RedAdvisor;
 
-    public bool IsAlive => ChessType != ChessType.Null;
-
-    public void ResetPosition()
-    {
+    public void ResetPosition() {
         X = _initX;
         Y = _initY;
-        ChessType = _initType;
+        IsAlive = true;
     }
 
-    public IEnumerable<MovePoint> GetMovePoints(IList<Chess> chesses) => ChessType switch
-    {
-        ChessType.BlackAdvisor or ChessType.RedAdvisor => AdvisorMovePoints(chesses),
-        ChessType.BlackBishop or ChessType.RedBishop => BishopMovePoints(chesses),
-        ChessType.BlackCannon or ChessType.RedCannon => CannonMovePoints(chesses),
-        ChessType.BlackKing or ChessType.RedKing => KingMovePoints(chesses),
-        ChessType.BlackKnight or ChessType.RedKnight => KnightMovePoints(chesses),
-        ChessType.BlackPawn or ChessType.RedPawn => PawnMovePoints(chesses),
-        ChessType.BlackRook or ChessType.RedRook => RookMovePoints(chesses),
+    public IEnumerable<MovePoint> GetMovePoints(Dictionary<(int, int), Chess> chessPositions) => ChessType switch {
+        ChessType.BlackAdvisor or ChessType.RedAdvisor => AdvisorMovePoints(chessPositions),
+        ChessType.BlackBishop or ChessType.RedBishop => BishopMovePoints(chessPositions),
+        ChessType.BlackCannon or ChessType.RedCannon => CannonMovePoints(chessPositions),
+        ChessType.BlackKing or ChessType.RedKing => KingMovePoints(chessPositions),
+        ChessType.BlackKnight or ChessType.RedKnight => KnightMovePoints(chessPositions),
+        ChessType.BlackPawn or ChessType.RedPawn => PawnMovePoints(chessPositions),
+        ChessType.BlackRook or ChessType.RedRook => RookMovePoints(chessPositions),
         _ => []
     };
 
-    private IEnumerable<MovePoint> AdvisorMovePoints(IList<Chess> chesses)
-    {
+    private IEnumerable<MovePoint> AdvisorMovePoints(Dictionary<(int, int), Chess> chessPositions) {
         return new[]
         {
             (X - 1, Y - 1), (X - 1, Y + 1), (X + 1, Y - 1), (X + 1, Y + 1)
@@ -77,17 +63,14 @@ internal partial class Chess : Piece
             (IsRed
                 ? pos is { Item1: >= 3 and <= 5, Item2: >= 7 and <= 9 }
                 : pos is { Item1: >= 3 and <= 5, Item2: >= 0 and <= 2 }
-            ) &&
-            chesses.SingleOrDefault(chess =>
-                chess is { IsAlive: true } &&
-                chess.IsRed == IsRed &&
-                chess.X == pos.Item1 &&
-                chess.Y == pos.Item2) == null
-        ).Select(pos => new MovePoint(pos.Item1, pos.Item2));
+            ) && (
+                !chessPositions.TryGetValue(pos, out var chess) ||
+                chess.IsRed ^ IsRed
+            )
+        ).Select(pos => new MovePoint(pos));
     }
 
-    private IEnumerable<MovePoint> BishopMovePoints(IList<Chess> chesses)
-    {
+    private IEnumerable<MovePoint> BishopMovePoints(Dictionary<(int, int), Chess> chessPositions) {
         return new[]
         {
             (X - 2, Y - 2), (X - 2, Y + 2), (X + 2, Y - 2), (X + 2, Y + 2)
@@ -95,54 +78,70 @@ internal partial class Chess : Piece
             (IsRed
                 ? pos is { Item1: >= 0 and <= 8, Item2: >= 5 and <= 9 }
                 : pos is { Item1: >= 0 and <= 8, Item2: >= 0 and <= 4 }
-            ) &&
-            chesses.SingleOrDefault(chess =>
-                chess is { IsAlive: true } &&
-                chess.IsRed == IsRed &&
-                chess.X == pos.Item1 &&
-                chess.Y == pos.Item2) == null &&
-            chesses.SingleOrDefault(chess =>
-                chess is { IsAlive: true } &&
-                chess.X == (pos.Item1 + X) / 2 &&
-                chess.Y == (pos.Item2 + Y) / 2) == null
-        ).Select(pos => new MovePoint(pos.Item1, pos.Item2));
+            ) && !chessPositions.ContainsKey(new((pos.Item1 + X) / 2, (pos.Item2 + Y) / 2)) &&
+            (
+                !chessPositions.TryGetValue(pos, out var chess) ||
+                chess.IsRed ^ IsRed
+            )
+        ).Select(pos => new MovePoint(pos));
     }
 
-    private IEnumerable<MovePoint> CannonMovePoints(IList<Chess> chesses)
-    {
-        int limit;
+    private IEnumerable<MovePoint> CannonMovePoints(Dictionary<(int, int), Chess> chessPositions) {
         //up
-        var up = chesses.Where(chess => chess.IsAlive && chess.X == X && chess.Y < Y)
-            .OrderByDescending(chess => chess.Y)
-            .Take(2).ToArray();
-        limit = up.Length > 0 ? up[0].Y : -1;
-        for (var i = Y - 1; i > limit; i--) yield return new MovePoint(X, i);
-        if (up.Length > 1 && up[1].IsRed ^ IsRed) yield return new MovePoint(X, up[1].Y);
+        for (var i = Y - 1; i >= 0; i--) {
+            if (!chessPositions.ContainsKey(new(X, i))) {
+                yield return new MovePoint(X, i);
+            } else {
+                for (var j = i - 1; j >= 0; j--) {
+                    if (chessPositions.TryGetValue(new(X, j), out var chess) &&
+                        chess.IsRed ^ IsRed) {
+                        yield return new MovePoint(X, j);
+                    }
+                }
+            }
+        }
         //down
-        var down = chesses.Where(chess => chess.IsAlive && chess.X == X && chess.Y > Y)
-            .OrderBy(chess => chess.Y)
-            .Take(2).ToArray();
-        limit = down.Length > 0 ? down[0].Y : 10;
-        for (var i = Y + 1; i < limit; i++) yield return new MovePoint(X, i);
-        if (down.Length > 1 && down[1].IsRed ^ IsRed) yield return new MovePoint(X, down[1].Y);
+        for (var i = Y + 1; i <= 9; i++) {
+            if (!chessPositions.ContainsKey(new(X, i))) {
+                yield return new MovePoint(X, i);
+            } else {
+                for (var j = i + 1; j <= 9; j++) {
+                    if (chessPositions.TryGetValue(new(X, j), out var chess) &&
+                        chess.IsRed ^ IsRed) {
+                        yield return new MovePoint(X, j);
+                    }
+                }
+            }
+        }
         //left
-        var left = chesses.Where(chess => chess.IsAlive && chess.Y == Y && chess.X < X)
-            .OrderByDescending(chess => chess.X)
-            .Take(2).ToArray();
-        limit = left.Length > 0 ? left[0].X : -1;
-        for (var i = X - 1; i > limit; i--) yield return new MovePoint(i, Y);
-        if (left.Length > 1 && left[1].IsRed ^ IsRed) yield return new MovePoint(left[1].X, Y);
+        for (var i = X - 1; i >= 0; i--) {
+            if (!chessPositions.ContainsKey(new(i, Y))) {
+                yield return new MovePoint(i, Y);
+            } else {
+                for (var j = i - 1; j >= 0; j--) {
+                    if (chessPositions.TryGetValue(new(j, Y), out var chess) &&
+                        chess.IsRed ^ IsRed) {
+                        yield return new MovePoint(j, Y);
+                    }
+                }
+            }
+        }
         //right
-        var right = chesses.Where(chess => chess.IsAlive && chess.Y == Y && chess.X > X)
-            .OrderBy(chess => chess.X)
-            .Take(2).ToArray();
-        limit = right.Length > 0 ? right[0].X : 9;
-        for (var i = X + 1; i < limit; i++) yield return new MovePoint(i, Y);
-        if (right.Length > 1 && right[1].IsRed ^ IsRed) yield return new MovePoint(right[1].X, Y);
+        for (var i = X + 1; i <= 8; i++) {
+            if (!chessPositions.ContainsKey(new(i, Y))) {
+                yield return new MovePoint(i, Y);
+            } else {
+                for (var j = i + 1; j <= 8; j++) {
+                    if (chessPositions.TryGetValue(new(j, Y), out var chess) &&
+                        chess.IsRed ^ IsRed) {
+                        yield return new MovePoint(j, Y);
+                    }
+                }
+            }
+        }
     }
 
-    private IEnumerable<MovePoint> KingMovePoints(IList<Chess> chesses)
-    {
+    private IEnumerable<MovePoint> KingMovePoints(Dictionary<(int, int), Chess> chessPositions) {
         return new[]
         {
             (X, Y - 1), (X, Y + 1), (X - 1, Y), (X + 1, Y)
@@ -150,208 +149,146 @@ internal partial class Chess : Piece
             (IsRed
                 ? pos is { Item1: >= 3 and <= 5, Item2: >= 7 and <= 9 }
                 : pos is { Item1: >= 3 and <= 5, Item2: >= 0 and <= 2 }
-            ) &&
-            chesses.SingleOrDefault(chess =>
-                chess is { IsAlive: true } &&
-                chess.IsRed == IsRed &&
-                chess.X == pos.Item1 &&
-                chess.Y == pos.Item2) == null
-        ).Select(pos => new MovePoint(pos.Item1, pos.Item2));
+            ) && (
+                !chessPositions.TryGetValue(pos, out var chess) ||
+                chess.IsRed ^ IsRed
+            )
+        ).Select(pos => new MovePoint(pos));
     }
 
-    private IEnumerable<MovePoint> KnightMovePoints(IList<Chess> chesses)
-    {
-        if (chesses.SingleOrDefault(chess => chess.IsAlive && chess.X == X && chess.Y == Y - 1) == null)
-        {
-            if (X - 1 >= 0 && Y - 2 >= 0 &&
-                chesses.SingleOrDefault(chess =>
-                    chess.IsAlive &&
-                    chess.X == X - 1 &&
-                    chess.Y == Y - 2
-                ) == null)
-                yield return new MovePoint(X - 1, Y - 2);
-            if (X + 1 <= 8 && Y - 2 >= 0 &&
-                chesses.SingleOrDefault(chess =>
-                    chess.IsAlive &&
-                    chess.X == X + 1 &&
-                    chess.Y == Y - 2
-                ) == null)
-                yield return new MovePoint(X + 1, Y - 2);
+    private IEnumerable<MovePoint> KnightMovePoints(Dictionary<(int, int), Chess> chessPositions) {
+        //up
+        if (!chessPositions.ContainsKey(new(X, Y - 1))) {
+            (int, int) p1 = new(X - 1, Y - 2), p2 = new(X + 1, Y - 2);
+            if (p1 is { Item1: >= 0, Item2: >= 0 } && (
+                !chessPositions.TryGetValue(p1, out var chess) ||
+                chess.IsRed ^ IsRed
+                )) yield return new MovePoint(p1);
+            if (p1 is { Item1: <= 8, Item2: >= 0 } && (
+                !chessPositions.TryGetValue(p2, out chess) ||
+                chess.IsRed ^ IsRed
+                )) yield return new MovePoint(p2);
         }
-
-        if (chesses.SingleOrDefault(chess => chess.IsAlive && chess.X == X && chess.Y == Y + 1) == null)
-        {
-            if (X - 1 >= 0 && Y + 2 <= 9 &&
-                chesses.SingleOrDefault(chess =>
-                    chess.IsAlive &&
-                    chess.X == X - 1 &&
-                    chess.Y == Y + 2
-                ) == null)
-                yield return new MovePoint(X - 1, Y + 2);
-            if (X + 1 <= 8 && Y + 2 <= 9 &&
-                chesses.SingleOrDefault(chess =>
-                    chess.IsAlive &&
-                    chess.X == X + 1 &&
-                    chess.Y == Y + 2
-                ) == null)
-                yield return new MovePoint(X + 1, Y + 2);
+        //down
+        if (!chessPositions.ContainsKey(new(X, Y + 1))) {
+            (int, int) p1 = new(X - 1, Y + 2), p2 = new(X + 1, Y + 2);
+            if (p1 is { Item1: >= 0, Item2: <= 9 } && (
+                !chessPositions.TryGetValue(p1, out var chess) ||
+                chess.IsRed ^ IsRed
+                )) yield return new MovePoint(p1);
+            if (p1 is { Item1: <= 8, Item2: <= 9 } && (
+                !chessPositions.TryGetValue(p2, out chess) ||
+                chess.IsRed ^ IsRed
+                )) yield return new MovePoint(p2);
         }
-
-        if (chesses.SingleOrDefault(chess => chess.IsAlive && chess.X == X - 1 && chess.Y == Y) == null)
-        {
-            if (X - 2 >= 0 && Y - 1 >= 0 &&
-                chesses.SingleOrDefault(chess =>
-                    chess.IsAlive &&
-                    chess.X == X - 2 &&
-                    chess.Y == Y - 1
-                ) == null)
-                yield return new MovePoint(X - 2, Y - 1);
-            if (X - 2 >= 0 && Y + 1 <= 9 &&
-                chesses.SingleOrDefault(chess =>
-                    chess.IsAlive &&
-                    chess.X == X - 2 &&
-                    chess.Y == Y + 1
-                ) == null)
-                yield return new MovePoint(X - 2, Y + 1);
+        //left
+        if (!chessPositions.ContainsKey(new(X - 1, Y))) {
+            (int, int) p1 = new(X - 2, Y - 1), p2 = new(X - 2, Y + 1);
+            if (p1 is { Item1: >= 0, Item2: >= 0 } && (
+                !chessPositions.TryGetValue(p1, out var chess) ||
+                chess.IsRed ^ IsRed
+                )) yield return new MovePoint(p1);
+            if (p1 is { Item1: >= 0, Item2: <= 9 } && (
+                !chessPositions.TryGetValue(p2, out chess) ||
+                chess.IsRed ^ IsRed
+                )) yield return new MovePoint(p2);
         }
-
-        if (chesses.SingleOrDefault(chess => chess.IsAlive && chess.X == X + 1 && chess.Y == Y) == null)
-        {
-            if (X + 2 <= 8 && Y - 1 >= 0 &&
-                chesses.SingleOrDefault(chess =>
-                    chess.IsAlive &&
-                    chess.X == X + 2 &&
-                    chess.Y == Y - 1
-                ) == null)
-                yield return new MovePoint(X + 2, Y - 1);
-            if (X + 2 <= 8 && Y + 1 <= 9 &&
-                chesses.SingleOrDefault(chess =>
-                    chess.IsAlive &&
-                    chess.X == X + 2 &&
-                    chess.Y == Y + 1
-                ) == null)
-                yield return new MovePoint(X + 2, Y + 1);
+        //right
+        if (!chessPositions.ContainsKey(new(X + 1, Y))) {
+            (int, int) p1 = new(X + 2, Y - 1), p2 = new(X + 2, Y + 1);
+            if (p1 is { Item1: <= 8, Item2: >= 0 } && (
+                !chessPositions.TryGetValue(p1, out var chess) ||
+                chess.IsRed ^ IsRed
+                )) yield return new MovePoint(p1);
+            if (p1 is { Item1: <= 8, Item2: <= 9 } && (
+                !chessPositions.TryGetValue(p2, out chess) ||
+                chess.IsRed ^ IsRed
+                )) yield return new MovePoint(p2);
         }
     }
 
-    private IEnumerable<MovePoint> PawnMovePoints(IList<Chess> chesses)
-    {
-        var chessPositions = chesses
-            .Where(chess => chess.IsAlive)
-            .ToDictionary(chess => (chess.X, chess.Y));
-        if (IsRed)
-        {
-            if (!chessPositions.TryGetValue(new ValueTuple<int, int>(X, Y - 1), out var forward) ||
-                forward.IsRed ^ IsRed)
-            {
-                if (MovePoint.IsValidMove(X, Y - 1)) yield return new MovePoint(X, Y - 1);
-            }
+    private IEnumerable<MovePoint> PawnMovePoints(Dictionary<(int, int), Chess> chessPositions) {
+        if (IsRed) {
+            (int, int) forward = new(X, Y - 1);
+
+            if (forward is { Item2: >= 0 } && (
+                !chessPositions.TryGetValue(forward, out var chess) ||
+                chess.IsRed ^ IsRed)) yield return new MovePoint(forward);
 
             if (Y > 4) yield break;
-            if (!chessPositions.TryGetValue(new ValueTuple<int, int>(X - 1, Y), out var left) ||
-                left.IsRed ^ IsRed)
-            {
-                if (MovePoint.IsValidMove(X - 1, Y)) yield return new MovePoint(X - 1, Y);
-            }
 
-            if (!chessPositions.TryGetValue(new ValueTuple<int, int>(X + 1, Y), out var right) ||
-                right.IsRed ^ IsRed)
-            {
-                if (MovePoint.IsValidMove(X + 1, Y)) yield return new MovePoint(X + 1, Y);
-            }
-        }
-        else
-        {
-            if (!chessPositions.TryGetValue(new ValueTuple<int, int>(X, Y + 1), out var forward) ||
-                forward.IsRed ^ IsRed)
-            {
-                if (MovePoint.IsValidMove(X, Y + 1)) yield return new MovePoint(X, Y + 1);
-            }
+            (int, int) left = new(X - 1, Y), right = new(X + 1, Y);
+
+            if (left is { Item1: >= 0 } && (
+                !chessPositions.TryGetValue(left, out chess) ||
+                chess.IsRed ^ IsRed)) yield return new MovePoint(left);
+
+            if (right is { Item1: <= 8 } && (
+                !chessPositions.TryGetValue(right, out chess) ||
+                chess.IsRed ^ IsRed)) yield return new MovePoint(right);
+        } else {
+            (int, int) forward = new(X, Y + 1);
+
+            if (forward is { Item2: <= 9 } && (
+                !chessPositions.TryGetValue(forward, out var chess) ||
+                chess.IsRed ^ IsRed)) yield return new MovePoint(X, Y + 1);
 
             if (Y < 5) yield break;
-            if (!chessPositions.TryGetValue(new ValueTuple<int, int>(X - 1, Y), out var left) ||
-                left.IsRed ^ IsRed)
-            {
-                if (MovePoint.IsValidMove(X - 1, Y)) yield return new MovePoint(X - 1, Y);
-            }
 
-            if (!chessPositions.TryGetValue(new ValueTuple<int, int>(X + 1, Y), out var right) ||
-                right.IsRed ^ IsRed)
-            {
-                if (MovePoint.IsValidMove(X + 1, Y)) yield return new MovePoint(X + 1, Y);
-            }
+            (int, int) left = new(X - 1, Y), right = new(X + 1, Y);
+
+            if (left is { Item1: >= 0 } && (
+                !chessPositions.TryGetValue(left, out chess) ||
+                chess.IsRed ^ IsRed)) yield return new MovePoint(left);
+
+            if (right is { Item1: <= 8 } && (
+                !chessPositions.TryGetValue(right, out chess) ||
+                chess.IsRed ^ IsRed)) yield return new MovePoint(right);
         }
     }
 
-    private IEnumerable<MovePoint> RookMovePoints(IList<Chess> chesses)
-    {
-        var chessPositions = chesses
-            .Where(chess => chess.IsAlive)
-            .ToDictionary(chess => (chess.X, chess.Y));
-        for (var i = Y - 1; i >= 0; i--)
-        {
-            if (!chessPositions.ContainsKey(new ValueTuple<int, int>(X, i)))
-            {
+    private IEnumerable<MovePoint> RookMovePoints(Dictionary<(int, int), Chess> chessPositions) {
+        //up
+        for (var i = Y - 1; i >= 0; i--) {
+            if (!chessPositions.ContainsKey(new(X, i))) {
                 yield return new MovePoint(X, i);
-            }
-            else
-            {
-                if (chessPositions[new ValueTuple<int, int>(X, i)].IsRed ^ IsRed)
-                {
+            } else {
+                if (chessPositions[new(X, i)].IsRed ^ IsRed) {
                     yield return new MovePoint(X, i);
                 }
-
                 break;
             }
         }
-
-        for (var i = Y + 1; i <= 9; i++)
-        {
-            if (!chessPositions.ContainsKey(new ValueTuple<int, int>(X, i)))
-            {
+        //down
+        for (var i = Y + 1; i <= 9; i++) {
+            if (!chessPositions.ContainsKey(new(X, i))) {
                 yield return new MovePoint(X, i);
-            }
-            else
-            {
-                if (chessPositions[new ValueTuple<int, int>(X, i)].IsRed ^ IsRed)
-                {
+            } else {
+                if (chessPositions[new(X, i)].IsRed ^ IsRed) {
                     yield return new MovePoint(X, i);
                 }
-
                 break;
             }
         }
-
-        for (var i = X - 1; i >= 0; i--)
-        {
-            if (!chessPositions.ContainsKey(new ValueTuple<int, int>(i, Y)))
-            {
+        //left
+        for (var i = X - 1; i >= 0; i--) {
+            if (!chessPositions.ContainsKey(new(i, Y))) {
                 yield return new MovePoint(i, Y);
-            }
-            else
-            {
-                if (chessPositions[new ValueTuple<int, int>(i, Y)].IsRed ^ IsRed)
-                {
+            } else {
+                if (chessPositions[new(i, Y)].IsRed ^ IsRed) {
                     yield return new MovePoint(i, Y);
                 }
-
                 break;
             }
         }
-
-        for (var i = X + 1; i <= 9; i++)
-        {
-            if (!chessPositions.ContainsKey(new ValueTuple<int, int>(i, Y)))
-            {
+        //right
+        for (var i = X + 1; i <= 9; i++) {
+            if (!chessPositions.ContainsKey(new(i, Y))) {
                 yield return new MovePoint(i, Y);
-            }
-            else
-            {
-                if (chessPositions[new ValueTuple<int, int>(i, Y)].IsRed ^ IsRed)
-                {
+            } else {
+                if (chessPositions[new(i, Y)].IsRed ^ IsRed) {
                     yield return new MovePoint(i, Y);
                 }
-
                 break;
             }
         }

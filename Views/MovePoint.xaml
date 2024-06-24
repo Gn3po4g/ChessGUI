@@ -4,12 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:m="clr-namespace:ChessGUI.Models"
-             mc:Ignorable="d" x:Name="MovePointPiece"
-             d:DataContext="{d:DesignInstance m:MovePoint}">
+             mc:Ignorable="d">
     <UserControl.InputBindings>
         <MouseBinding
             Gesture="LeftClick"
-            Command="{Binding Command, ElementName=MovePointPiece}"
+            Command="{Binding Command, RelativeSource={RelativeSource AncestorType=UserControl}}"
             CommandParameter="{Binding}" />
     </UserControl.InputBindings>
     <Border>

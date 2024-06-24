@@ -40,6 +40,7 @@
     <None Remove="Resources\mask.png" />
     <None Remove="Resources\mask2.bmp" />
     <None Remove="Resources\mm.png" />
+    <None Remove="Resources\move.wav" />
     <None Remove="Resources\ra.bmp" />
     <None Remove="Resources\ra.png" />
     <None Remove="Resources\rb.bmp" />
@@ -65,6 +66,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="EleCho.WpfSuite" Version="0.4.1" />
     <PackageReference Include="HandyControl" Version="3.5.1" />
   </ItemGroup>
 
@@ -79,6 +81,9 @@
     <Resource Include="Resources\board.png" />
     <Resource Include="Resources\check.png" />
     <Resource Include="Resources\mark.png" />
+    <EmbeddedResource Include="Resources\move.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Resource Include="Resources\red_advisor.png" />
     <Resource Include="Resources\red_bishop.png" />
     <Resource Include="Resources\red_cannon.png" />
@@ -89,6 +94,10 @@
     <None Remove="Resources\favicon.ico" />
     <Content Include="Resources\favicon.ico" />
     <Resource Include="Resources\favicon.ico" />
+    <None Remove="Resources\capture.wav" />
+    <EmbeddedResource Include="Resources\capture.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

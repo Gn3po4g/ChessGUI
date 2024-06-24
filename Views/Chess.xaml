@@ -5,14 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ChessGUI"
              xmlns:m="clr-namespace:ChessGUI.Models"
-             mc:Ignorable="d" x:Name="ChessPiece"
-             d:DataContext="{d:DesignInstance m:Chess}">
+             d:DataContext="{d:DesignInstance Type=m:Chess}"
+             mc:Ignorable="d">
     <UserControl.Resources>
         <local:ChessType2ImageBrushConverter x:Key="Type2Image" />
         <Style x:Key="ChessStyle" TargetType="Border">
             <Setter Property="Visibility" Value="Visible" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding ChessType}" Value="{x:Static m:ChessType.Null}">
+                <DataTrigger Binding="{Binding IsAlive}"
+                             Value="False">
                     <Setter Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
             </Style.Triggers>
@@ -21,7 +22,7 @@
     <UserControl.InputBindings>
         <MouseBinding
             Gesture="LeftClick"
-            Command="{Binding Command, ElementName=ChessPiece}"
+            Command="{Binding Command, RelativeSource={RelativeSource AncestorType=UserControl}}"
             CommandParameter="{Binding}" />
     </UserControl.InputBindings>
     <Border Width="{x:Static m:Piece.PieceSize}"

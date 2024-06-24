@@ -1,16 +1,15 @@
 using System.Windows;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ChessGUI.Views;
 
 public partial class MovePoint
 {
-    public static readonly DependencyProperty CommandProperty =
-        DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(MovePoint));
-    
-    public ICommand Command
+    public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(IRelayCommand), typeof(MovePoint));
+
+    public IRelayCommand Command
     {
-        get => (ICommand)GetValue(CommandProperty);
+        get => (IRelayCommand)GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
     
