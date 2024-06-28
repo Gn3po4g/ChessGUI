@@ -1,9 +1,6 @@
-namespace ChessGUI.Models;
+﻿namespace ChessGUI.Models;
 
-public partial class MovePoint : Piece {
-    public MovePoint() {
-    }
-
+public class MovePoint : Piece {
     public MovePoint(int x, int y) {
         X = x;
         Y = y;

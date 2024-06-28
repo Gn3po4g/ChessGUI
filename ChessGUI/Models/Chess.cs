@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ChessGUI.Models;
-
 public enum ChessType {
     BlackAdvisor,
     BlackBishop,
@@ -20,27 +21,24 @@ public enum ChessType {
 }
 
 public partial class Chess : Piece {
-    private readonly int _initX, _initY;
+    private readonly int initX, initY;
 
-    [ObservableProperty] private ChessType _chessType;
+    [ObservableProperty] private ChessType chessType;
 
-    [ObservableProperty] private bool _isAlive;
+    [ObservableProperty] private bool isAlive;
 
-    public Chess() {
-    }
+    public bool IsRed => ChessType >= ChessType.RedAdvisor;
 
     public Chess(int initX, int initY, ChessType type) {
-        _initX = initX;
-        _initY = initY;
+        this.initX = initX;
+        this.initY = initY;
         ChessType = type;
         ResetPosition();
     }
 
-    public bool IsRed => ChessType >= ChessType.RedAdvisor;
-
     public void ResetPosition() {
-        X = _initX;
-        Y = _initY;
+        X = initX;
+        Y = initY;
         IsAlive = true;
     }
 
@@ -54,7 +52,6 @@ public partial class Chess : Piece {
         ChessType.BlackRook or ChessType.RedRook => RookMovePoints(chessPositions),
         _ => []
     };
-
     private IEnumerable<MovePoint> AdvisorMovePoints(Dictionary<(int, int), Chess> chessPositions) {
         return new[]
         {
@@ -96,8 +93,10 @@ public partial class Chess : Piece {
                     if (chessPositions.TryGetValue(new(X, j), out var chess) &&
                         chess.IsRed ^ IsRed) {
                         yield return new MovePoint(X, j);
+                        break;
                     }
                 }
+                break;
             }
         }
         //down
@@ -109,8 +108,10 @@ public partial class Chess : Piece {
                     if (chessPositions.TryGetValue(new(X, j), out var chess) &&
                         chess.IsRed ^ IsRed) {
                         yield return new MovePoint(X, j);
+                        break;
                     }
                 }
+                break;
             }
         }
         //left
@@ -122,8 +123,10 @@ public partial class Chess : Piece {
                     if (chessPositions.TryGetValue(new(j, Y), out var chess) &&
                         chess.IsRed ^ IsRed) {
                         yield return new MovePoint(j, Y);
+                        break;
                     }
                 }
+                break;
             }
         }
         //right
@@ -135,8 +138,10 @@ public partial class Chess : Piece {
                     if (chessPositions.TryGetValue(new(j, Y), out var chess) &&
                         chess.IsRed ^ IsRed) {
                         yield return new MovePoint(j, Y);
+                        break;
                     }
                 }
+                break;
             }
         }
     }
