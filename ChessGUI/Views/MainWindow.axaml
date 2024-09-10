@@ -1,8 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:model="using:ChessGUI.Models"
-		xmlns:vm="using:ChessGUI.ViewModels"
-		xmlns:view="using:ChessGUI.Views"
+        xmlns:m="using:ChessGUI.Models"
+				xmlns:v="using:ChessGUI.Views"
+				xmlns:vm="using:ChessGUI.ViewModels"
+        xmlns:local="using:ChessGUI"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
@@ -10,20 +11,20 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/favicon.ico"
         Title="ChessGUI"
-		SizeToContent="WidthAndHeight"
-		CanResize="False">
+				SizeToContent="WidthAndHeight"
+				CanResize="False">
 	<Window.DataContext>
 		<vm:MainWindowViewModel/>
 	</Window.DataContext>
 
-	<Grid RowDefinitions="auto *" Background="#D5B790">
+	<Grid RowDefinitions="auto *" ColumnDefinitions="* *" Background="#D5B790">
 		<StackPanel Grid.Row="0">
-			<Button>Reset</Button>
+			<Button Command="{Binding ResetBoardCommand}">Reset</Button>
 		</StackPanel>
 		<ItemsControl Grid.Row="1" ItemsSource="{Binding Pieces}">
 			<ItemsControl.ItemsPanel>
 				<ItemsPanelTemplate>
-					<Canvas Width="{Binding BoardWidth}" Height="{Binding BoardHeight}">
+					<Canvas Width="{x:Static local:Constant.BOARD_WIDTH}" Height="{x:Static local:Constant.BOARD_HEIGHT}">
 						<Canvas.Background>
 							<ImageBrush Source="/Assets/board.png"/>
 						</Canvas.Background>
@@ -31,39 +32,39 @@
 				</ItemsPanelTemplate>
 			</ItemsControl.ItemsPanel>
 			<ItemsControl.DataTemplates>
-				<DataTemplate DataType="model:Chess">
-					<view:Chess>
-						<Interaction.Behaviors>
-							<EventTriggerBehavior EventName="PointerPressed">
-								<InvokeCommandAction
-									Command="{Binding $parent.((vm:MainWindowViewModel)DataContext).ClickCommand}"
-									CommandParameter="{Binding}"/>
-							</EventTriggerBehavior>
-						</Interaction.Behaviors>
-					</view:Chess>
+				<DataTemplate DataType="vm:ChessViewModel">
+          <v:Chess>
+            <Interaction.Behaviors>
+              <EventTriggerBehavior EventName="PointerPressed">
+                <InvokeCommandAction
+                    Command="{Binding $parent.((vm:MainWindowViewModel)DataContext).ClickCommand}"
+                    CommandParameter="{Binding}"/>
+              </EventTriggerBehavior>
+            </Interaction.Behaviors>
+					</v:Chess>
 				</DataTemplate>
-				<DataTemplate DataType="model:Mark">
-					<view:Mark/>
+				<DataTemplate DataType="vm:MarkViewModel">
+					<v:Mark/>
 				</DataTemplate>
-				<DataTemplate DataType="model:MovePoint">
-					<view:MovePoint>
-						<Interaction.Behaviors>
-							<EventTriggerBehavior EventName="PointerPressed">
-								<InvokeCommandAction
-									Command="{Binding $parent.((vm:MainWindowViewModel)DataContext).MoveToCommand}"
-									CommandParameter="{Binding}"/>
-							</EventTriggerBehavior>
-						</Interaction.Behaviors>
-					</view:MovePoint>
+				<DataTemplate DataType="vm:MovePointViewModel">
+					<v:MovePoint>
+            <Interaction.Behaviors>
+              <EventTriggerBehavior EventName="PointerPressed">
+                <InvokeCommandAction
+                    Command="{Binding $parent.((vm:MainWindowViewModel)DataContext).MoveToCommand}"
+                    CommandParameter="{Binding}"/>
+              </EventTriggerBehavior>
+            </Interaction.Behaviors>
+					</v:MovePoint>
 				</DataTemplate>
 			</ItemsControl.DataTemplates>
 			<ItemsControl.Styles>
-				<Style Selector="ContentPresenter" x:DataType="model:Piece">
-					<Setter Property="Canvas.Left" Value="{Binding CanvasTop}" />
-					<Setter Property="Canvas.Top" Value="{Binding CanvasLeft}" />
-				</Style>
+				<Style Selector="ContentPresenter" x:DataType="m:IPiece">
+					<Setter Property="Canvas.Left" Value="{Binding Position.CanvasLeft}" />
+					<Setter Property="Canvas.Top" Value="{Binding Position.CanvasTop}" />
+        </Style>
 			</ItemsControl.Styles>
 		</ItemsControl>
+    <TextBlock Grid.Row="1" Grid.Column="1" Background="White" Width="100"></TextBlock>
 	</Grid>
-
 </Window>
