@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:XiangqiGUI.ViewModels"
+             xmlns:local="using:XiangqiGUI"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="XiangqiGUI.Views.MovePoint"
+             x:DataType="vm:MovePointViewModel"
+             Width="{x:Static local:Constant.PieceSize}"
+             Height="{x:Static local:Constant.PieceSize}">
+    <Panel Background="Transparent">
+        <Interaction.Behaviors>
+            <EventTriggerBehavior EventName="PointerPressed">
+                <InvokeCommandAction Command="{Binding MoveTo}" />
+            </EventTriggerBehavior>
+        </Interaction.Behaviors>
+        <Ellipse Width="8" Height="8" Fill="GreenYellow" />
+    </Panel>
+</UserControl>

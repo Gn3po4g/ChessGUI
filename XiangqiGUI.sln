@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessGUI", "ChessGUI\ChessGUI.csproj", "{3FCF6E13-F25C-481B-86D4-B8C02AEEE2FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XiangqiGUI", "XiangqiGUI\XiangqiGUI.csproj", "{3FCF6E13-F25C-481B-86D4-B8C02AEEE2FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

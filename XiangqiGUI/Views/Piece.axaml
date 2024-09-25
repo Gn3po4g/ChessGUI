@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:XiangqiGUI.Converters"
+             xmlns:vm="using:XiangqiGUI.ViewModels"
+             xmlns:local="using:XiangqiGUI"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="XiangqiGUI.Views.Piece"
+             x:DataType="vm:PieceViewModel"
+             Width="{x:Static local:Constant.PieceSize}"
+             Height="{x:Static local:Constant.PieceSize}"
+             IsVisible="{Binding IsAlive}">
+    <Design.DataContext>
+        <vm:DesignPieceViewModel />
+    </Design.DataContext>
+    <UserControl.Resources>
+        <conv:PieceTypeToImage x:Key="TypeToImage" />
+    </UserControl.Resources>
+    <Panel x:Name="Panel">
+        <Image Source="{Binding Type, Converter={StaticResource TypeToImage}}" />
+        <Interaction.Behaviors>
+            <EventTriggerBehavior EventName="PointerPressed">
+                <InvokeCommandAction Command="{Binding Click}" />
+            </EventTriggerBehavior>
+        </Interaction.Behaviors>
+    </Panel>
+</UserControl>
