@@ -1,1 +1,1 @@
-# ChessGUI
+# XiangqiGUI
