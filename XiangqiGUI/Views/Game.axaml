@@ -1,0 +1,58 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="using:XiangqiGUI.Views"
+             xmlns:vm="using:XiangqiGUI.ViewModels"
+             mc:Ignorable="d"
+             x:Class="XiangqiGUI.Views.Game"
+             x:DataType="vm:GameViewModel">
+    <Design.DataContext>
+        <vm:GameViewModel />
+    </Design.DataContext>
+    <Panel Background="#D5B790">
+        <Panel Margin="10" Width="540" Height="600">
+            <Panel.Background>
+                <ImageBrush Source="/Assets/Board.png" />
+            </Panel.Background>
+            <ItemsControl ItemsSource="{Binding Board}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="10" Columns="9" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <v:Block />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl ItemsSource="{Binding MovePoints}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid RowDefinitions="*,*,*,*,*,*,*,*,*,*"
+                              ColumnDefinitions="*,*,*,*,*,*,*,*,*" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Panel Background="Transparent">
+                            <Interaction.Behaviors>
+                                <EventTriggerBehavior EventName="PointerPressed">
+                                    <InvokeCommandAction Command="{Binding Move}" />
+                                </EventTriggerBehavior>
+                            </Interaction.Behaviors>
+                            <Ellipse Width="8" Height="8" Fill="GreenYellow" />
+                        </Panel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.Styles>
+                    <Style Selector="ContentPresenter" x:DataType="vm:MovePointViewModel">
+                        <Setter Property="Grid.Row" Value="{Binding Row}" />
+                        <Setter Property="Grid.Column" Value="{Binding Col}" />
+                    </Style>
+                </ItemsControl.Styles>
+            </ItemsControl>
+        </Panel>
+    </Panel>
+</UserControl>

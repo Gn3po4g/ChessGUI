@@ -1,61 +1,59 @@
 namespace XiangqiGUI.Models;
 
-public record Piece(Position Position, PieceType Type)
+public record Piece(PieceType Type, PieceColor Color)
 {
-    public static Piece[] ChessBoard { get; } =
-    [
+    public static Dictionary<Position, Piece> Board { get; } = new()
+    {
         // Black
-        new(new Position(0, 0), PieceType.BlackChariot),
-        new(new Position(1, 0), PieceType.BlackHorse),
-        new(new Position(2, 0), PieceType.BlackElephant),
-        new(new Position(3, 0), PieceType.BlackAdvisor),
-        new(new Position(4, 0), PieceType.BlackKing),
-        new(new Position(5, 0), PieceType.BlackAdvisor),
-        new(new Position(6, 0), PieceType.BlackElephant),
-        new(new Position(7, 0), PieceType.BlackHorse),
-        new(new Position(8, 0), PieceType.BlackChariot),
-        new(new Position(1, 2), PieceType.BlackCannon),
-        new(new Position(7, 2), PieceType.BlackCannon),
-        new(new Position(0, 3), PieceType.BlackSoldier),
-        new(new Position(2, 3), PieceType.BlackSoldier),
-        new(new Position(4, 3), PieceType.BlackSoldier),
-        new(new Position(6, 3), PieceType.BlackSoldier),
-        new(new Position(8, 3), PieceType.BlackSoldier),
+        [new Position(0, 0)] = new Piece(PieceType.Chariot, PieceColor.Black),
+        [new Position(0, 1)] = new Piece(PieceType.Horse, PieceColor.Black),
+        [new Position(0, 2)] = new Piece(PieceType.Elephant, PieceColor.Black),
+        [new Position(0, 3)] = new Piece(PieceType.Advisor, PieceColor.Black),
+        [new Position(0, 4)] = new Piece(PieceType.King, PieceColor.Black),
+        [new Position(0, 5)] = new Piece(PieceType.Advisor, PieceColor.Black),
+        [new Position(0, 6)] = new Piece(PieceType.Elephant, PieceColor.Black),
+        [new Position(0, 7)] = new Piece(PieceType.Horse, PieceColor.Black),
+        [new Position(0, 8)] = new Piece(PieceType.Chariot, PieceColor.Black),
+        [new Position(2, 1)] = new Piece(PieceType.Cannon, PieceColor.Black),
+        [new Position(2, 7)] = new Piece(PieceType.Cannon, PieceColor.Black),
+        [new Position(3, 0)] = new Piece(PieceType.Soldier, PieceColor.Black),
+        [new Position(3, 2)] = new Piece(PieceType.Soldier, PieceColor.Black),
+        [new Position(3, 4)] = new Piece(PieceType.Soldier, PieceColor.Black),
+        [new Position(3, 6)] = new Piece(PieceType.Soldier, PieceColor.Black),
+        [new Position(3, 8)] = new Piece(PieceType.Soldier, PieceColor.Black),
         // Red
-        new(new Position(0, 9), PieceType.RedChariot),
-        new(new Position(1, 9), PieceType.RedHorse),
-        new(new Position(2, 9), PieceType.RedElephant),
-        new(new Position(3, 9), PieceType.RedAdvisor),
-        new(new Position(4, 9), PieceType.RedKing),
-        new(new Position(5, 9), PieceType.RedAdvisor),
-        new(new Position(6, 9), PieceType.RedElephant),
-        new(new Position(7, 9), PieceType.RedHorse),
-        new(new Position(8, 9), PieceType.RedChariot),
-        new(new Position(1, 7), PieceType.RedCannon),
-        new(new Position(7, 7), PieceType.RedCannon),
-        new(new Position(0, 6), PieceType.RedSoldier),
-        new(new Position(2, 6), PieceType.RedSoldier),
-        new(new Position(4, 6), PieceType.RedSoldier),
-        new(new Position(6, 6), PieceType.RedSoldier),
-        new(new Position(8, 6), PieceType.RedSoldier),
-    ];
+        [new Position(9, 0)] = new Piece(PieceType.Chariot, PieceColor.Red),
+        [new Position(9, 1)] = new Piece(PieceType.Horse, PieceColor.Red),
+        [new Position(9, 2)] = new Piece(PieceType.Elephant, PieceColor.Red),
+        [new Position(9, 3)] = new Piece(PieceType.Advisor, PieceColor.Red),
+        [new Position(9, 4)] = new Piece(PieceType.King, PieceColor.Red),
+        [new Position(9, 5)] = new Piece(PieceType.Advisor, PieceColor.Red),
+        [new Position(9, 6)] = new Piece(PieceType.Elephant, PieceColor.Red),
+        [new Position(9, 7)] = new Piece(PieceType.Horse, PieceColor.Red),
+        [new Position(9, 8)] = new Piece(PieceType.Chariot, PieceColor.Red),
+        [new Position(7, 1)] = new Piece(PieceType.Cannon, PieceColor.Red),
+        [new Position(7, 7)] = new Piece(PieceType.Cannon, PieceColor.Red),
+        [new Position(6, 0)] = new Piece(PieceType.Soldier, PieceColor.Red),
+        [new Position(6, 2)] = new Piece(PieceType.Soldier, PieceColor.Red),
+        [new Position(6, 4)] = new Piece(PieceType.Soldier, PieceColor.Red),
+        [new Position(6, 6)] = new Piece(PieceType.Soldier, PieceColor.Red),
+        [new Position(6, 8)] = new Piece(PieceType.Soldier, PieceColor.Red),
+    };
 }
 
 public enum PieceType
 {
-    BlackAdvisor,
-    BlackCannon,
-    BlackChariot,
-    BlackElephant,
-    BlackHorse,
-    BlackKing,
-    BlackSoldier,
-    None,
-    RedAdvisor,
-    RedCannon,
-    RedChariot,
-    RedElephant,
-    RedHorse,
-    RedKing,
-    RedSoldier,
+    King,
+    Advisor,
+    Elephant,
+    Horse,
+    Chariot,
+    Cannon,
+    Soldier
+}
+
+public enum PieceColor
+{
+    Red,
+    Black
 }

@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:XiangqiGUI.Converters"
+             xmlns:vm="using:XiangqiGUI.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="XiangqiGUI.Views.Block"
+             x:DataType="vm:BlockViewModel"
+             d:DesignHeight="60" d:DesignWidth="60">
+    <Design.DataContext>
+        <vm:BlockViewModel />
+    </Design.DataContext>
+    <UserControl.Resources>
+        <conv:PieceToImage x:Key="PieceToImage" />
+    </UserControl.Resources>
+    <Panel>
+        <Panel IsVisible="{Binding PieceInBlock, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Interaction.Behaviors>
+                <EventTriggerBehavior EventName="PointerPressed">
+                    <InvokeCommandAction Command="{Binding Click}" />
+                </EventTriggerBehavior>
+            </Interaction.Behaviors>
+            <Image Source="{Binding PieceInBlock, Converter={StaticResource PieceToImage}}" Margin="2" />
+        </Panel>
+        <Image Source="/Assets/Mark.png" IsVisible="{Binding IsMarked}" />
+        <Ellipse Stroke="rgba(255,255,255,0.8)" StrokeThickness="2" IsVisible="False" />
+    </Panel>
+</UserControl>

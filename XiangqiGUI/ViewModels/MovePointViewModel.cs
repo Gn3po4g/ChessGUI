@@ -3,13 +3,13 @@ using XiangqiGUI.Models;
 
 namespace XiangqiGUI.ViewModels;
 
-public class MovePointViewModel(Position position) : ViewModelBase, ICanvasItem
+public class MovePointViewModel(Position from, Position to) : ViewModelBase
 {
-    public double CanvasLeft => position.X * Constant.PieceSize;
-    public double CanvasTop => position.Y * Constant.PieceSize;
-    public int ZIndex => 3;
-    
-    public Position Position => position;
+    public int Row => to.Row;
+    public int Col => to.Col;
 
-    public void MoveTo() => WeakReferenceMessenger.Default.Send(new ClickMessage(this));
+    public void Move()
+    {
+        WeakReferenceMessenger.Default.Send(new MoveAction(from, to));
+    }
 }

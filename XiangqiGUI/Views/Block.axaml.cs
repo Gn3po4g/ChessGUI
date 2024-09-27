@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace XiangqiGUI.Views;
 
-public partial class MovePoint : UserControl
+public partial class Block : UserControl
 {
-    public MovePoint()
+    public Block()
     {
         InitializeComponent();
     }

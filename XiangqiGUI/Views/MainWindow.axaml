@@ -2,7 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="using:XiangqiGUI.Views"
         xmlns:vm="using:XiangqiGUI.ViewModels"
-        xmlns:local="using:XiangqiGUI"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
@@ -16,40 +15,11 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="auto *" ColumnDefinitions="* *" Background="#D5B790">
+    <Grid RowDefinitions="auto *" ColumnDefinitions="* *">
         <StackPanel Grid.Row="0" Grid.Column="0">
             <Button Command="{Binding ResetBoard}">重置棋盘</Button>
         </StackPanel>
-        <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Pieces}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas Width="{x:Static local:Constant.BoardWidth}"
-                            Height="{x:Static local:Constant.BoardHeight}">
-                        <Canvas.Background>
-                            <ImageBrush Source="/Assets/Board.png" />
-                        </Canvas.Background>
-                    </Canvas>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.DataTemplates>
-                <DataTemplate DataType="vm:PieceViewModel">
-                    <v:Piece />
-                </DataTemplate>
-                <DataTemplate DataType="vm:MarkViewModel">
-                    <v:Mark />
-                </DataTemplate>
-                <DataTemplate DataType="vm:MovePointViewModel">
-                    <v:MovePoint />
-                </DataTemplate>
-            </ItemsControl.DataTemplates>
-            <ItemsControl.Styles>
-                <Style Selector="ContentPresenter" x:DataType="vm:ICanvasItem">
-                    <Setter Property="Canvas.Left" Value="{Binding CanvasLeft}" />
-                    <Setter Property="Canvas.Top" Value="{Binding CanvasTop}" />
-                    <Setter Property="ZIndex" Value="{Binding ZIndex}" />
-                </Style>
-            </ItemsControl.Styles>
-        </ItemsControl>
+        <v:Game Grid.Row="1" Grid.Column="0" DataContext="{Binding GameViewModel}" />
         <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="White" Width="100" />
     </Grid>
 </Window>
