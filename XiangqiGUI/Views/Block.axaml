@@ -24,6 +24,7 @@
             <Image Source="{Binding PieceInBlock, Converter={StaticResource PieceToImage}}" Margin="2" />
         </Panel>
         <Image Source="/Assets/Mark.png" IsVisible="{Binding IsMarked}" />
-        <Ellipse Stroke="rgba(255,255,255,0.8)" StrokeThickness="2" IsVisible="False" />
+        <Ellipse Stroke="rgba(255,255,255,0.8)" StrokeThickness="2" IsVisible="{Binding IsTo}" />
+      
     </Panel>
 </UserControl>

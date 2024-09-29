@@ -43,7 +43,7 @@ public partial class GameViewModel : ViewModelBase, IRecipient<MoveAction>
 
     private Position _lastPosition = new();
 
-    private (Position, Position) _lastMove;
+    private (Position From, Position To) _lastMove = (new(), new());
 
     public GameViewModel()
     {
@@ -58,11 +58,15 @@ public partial class GameViewModel : ViewModelBase, IRecipient<MoveAction>
         {
             blockViewModel.Reset();
         }
+        _whichTurn = PieceColor.Red;
+        MovePoints = [];
     }
 
     private void ClickPiece(Position position, Piece piece)
     {
-        if (piece.Color != _whichTurn) return;
+        if (piece.Color != _whichTurn) return; 
+        
+        WavPlayer.Capture();
 
         Board[_lastPosition].IsMarked = false;
         Board[position].IsMarked = true;
@@ -70,17 +74,24 @@ public partial class GameViewModel : ViewModelBase, IRecipient<MoveAction>
 
         MovePoints = ValidMoves(position, piece)
             .Select(pos => new MovePointViewModel(position, pos));
+
     }
 
     private void Move(Position from, Position to)
     {
+        WavPlayer.Move();
+
         Board[_lastPosition].IsMarked = false;
-        _lastMove = (from, to);
+        Board[_lastMove.From].IsFrom = false;
+        Board[_lastMove.To].IsTo = false;
 
         Board[to].PieceInBlock = Board[from].PieceInBlock;
+        Board[to].IsTo = true;
         Board[from].PieceInBlock = null;
+        Board[from].IsFrom = true;
 
         MovePoints = [];
+        _lastMove = (from, to);
         _whichTurn = _whichTurn == PieceColor.Red ? PieceColor.Black : PieceColor.Red;
     }
 
